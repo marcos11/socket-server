@@ -2,8 +2,8 @@ import express from 'express';
 import { SERVER_PORT } from '../global/environment';
 import { createServer } from 'node:http';
 import { Server, Socket }  from "socket.io";
-import cors from 'cors';
 import * as socket from '../sockets/socket';
+
 
 export default class Servidor{
     private static _instance: Servidor;
@@ -35,11 +35,19 @@ export default class Servidor{
 
     private escucharSockets(){
         this.io.on('connection',(cliente:Socket) => {
-            console.log("cliente conectado");
+            console.log(cliente.id);
+
+            // conectar cliente();
+            socket.conectarCliente(cliente);
+
+            // configurar usuario
+            socket.configurarUsuario(cliente,this.io);
 
             socket.mensaje(cliente,this.io);
             // desconectar socket
             socket.desconectar(cliente);
+
+            
         })
     }
 
